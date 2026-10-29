@@ -1,70 +1,70 @@
 package com.example.kotlinejemplogridview
 
 import android.os.Bundle
-import android.widget.GridView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.example.kotlinejemplogridview.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    // Variables para el GridView y el adaptador
-    private lateinit var gridView: GridView
-    private lateinit var adapter: GridViewAdapter
-    private lateinit var itemList: ArrayList<GridViewModal>
+    // ViewBinding: clase generada automáticamente a partir de activity_main.xml
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        // Inicializar el GridView desde el layout
-        gridView = findViewById(R.id.gridView)
+        // La app ocupa toda la pantalla, también detrás de las barras del sistema
+        enableEdgeToEdge()
 
-        // Crear la lista de elementos con datos de ejemplo
-        itemList = ArrayList()
+        // Inflamos el layout con ViewBinding y lo ponemos como contenido
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Agregar elementos a la lista
-        // Asegúrate de tener estas imágenes en la carpeta res/drawable
-        itemList.add(GridViewModal("Manzana", R.drawable.manzana))
-        itemList.add(GridViewModal("Plátano", R.drawable.platano))
-        itemList.add(GridViewModal("Cereza", R.drawable.cereza))
-        itemList.add(GridViewModal("Pera", R.drawable.pera))
-        itemList.add(GridViewModal("Fresa", R.drawable.fresa))
-        itemList.add(GridViewModal("Uva", R.drawable.uva))
-        itemList.add(GridViewModal("Calabaza", R.drawable.calabaza))
-        itemList.add(GridViewModal("Limón", R.drawable.limon))
-        itemList.add(GridViewModal("Piña", R.drawable.pina))
-
-        // Crear el adaptador con el contexto y la lista de elementos
-        adapter = GridViewAdapter(this, itemList)
-
-        // Asignar el adaptador al GridView
-        gridView.adapter = adapter
-
-        // Configurar el evento de clic en los elementos del GridView
-        // position: posición del elemento clickeado (comienza en 0)
-        gridView.setOnItemClickListener { parent, view, position, id ->
-            // Obtener el elemento seleccionado
-            val selectedItem = itemList[position]
-
-            // Mostrar un Toast con el nombre del elemento seleccionado
-            Toast.makeText(
-                this,
-                "Seleccionaste: ${selectedItem.itemName}",
-                Toast.LENGTH_SHORT
-            ).show()
+        // --- Insets: evitamos que el contenido quede bajo la cámara o las barras ---
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { vista, insets ->
+            // Espacio que ocupan las barras del sistema y el recorte de la cámara
+            val barras = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            // 16dp extra de margen, convertidos a píxeles
+            val extra = (16 * resources.displayMetrics.density).toInt()
+            vista.setPadding(
+                barras.left + extra,
+                barras.top + extra,
+                barras.right + extra,
+                barras.bottom + extra
+            )
+            insets
         }
 
-        // Configurar el evento de clic largo (opcional)
-        gridView.setOnItemLongClickListener { parent, view, position, id ->
-            val selectedItem = itemList[position]
+        // Datos de ejemplo: cada fruta con su nombre y su imagen de res/drawable
+        val frutas = listOf(
+            Fruta("Manzana", R.drawable.manzana),
+            Fruta("Plátano", R.drawable.platano),
+            Fruta("Cereza", R.drawable.cereza),
+            Fruta("Pera", R.drawable.pera),
+            Fruta("Fresa", R.drawable.fresa),
+            Fruta("Uva", R.drawable.uva),
+            Fruta("Calabaza", R.drawable.calabaza),
+            Fruta("Limón", R.drawable.limon),
+            Fruta("Piña", R.drawable.pina)
+        )
 
-            Toast.makeText(
-                this,
-                "Clic largo en: ${selectedItem.itemName}",
-                Toast.LENGTH_LONG
-            ).show()
+        // Conectamos el GridView con el adaptador
+        binding.gridView.adapter = FrutaAdapter(frutas)
 
-            // Devolver true para indicar que el evento fue manejado
+        // Clic normal: position indica qué celda se ha pulsado (empieza en 0)
+        binding.gridView.setOnItemClickListener { _, _, position, _ ->
+            Toast.makeText(this, "Seleccionaste: ${frutas[position].nombre}", Toast.LENGTH_SHORT).show()
+        }
+
+        // Clic largo: devolvemos true para indicar que ya hemos tratado el evento
+        // (si devolviéramos false, también se lanzaría el clic normal)
+        binding.gridView.setOnItemLongClickListener { _, _, position, _ ->
+            Toast.makeText(this, "Clic largo en: ${frutas[position].nombre}", Toast.LENGTH_LONG).show()
             true
         }
     }

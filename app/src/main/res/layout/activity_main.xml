@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- GridView: muestra los elementos en una cuadrícula.
+     El padding lo pone el código (insets), por eso aquí no lo indicamos.
+     clipToPadding="false" deja que la cuadrícula se desplace por debajo de las barras. -->
 <GridView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/gridView"
     android:layout_width="match_parent"
@@ -9,4 +12,4 @@
     android:horizontalSpacing="10dp"
     android:stretchMode="columnWidth"
     android:gravity="center"
-    android:padding="10dp" />
+    android:clipToPadding="false" />
