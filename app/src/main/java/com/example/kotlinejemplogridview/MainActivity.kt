@@ -8,10 +8,20 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.kotlinejemplogridview.databinding.ActivityMainBinding
 
+/**
+ * Activity principal: muestra un GridView de frutas y unos botones
+ * que cambian el aspecto de la cuadrícula mientras la app está funcionando.
+ * - Botones 1, 2, 3 y 4: número de columnas (con 1 columna parece un ListView).
+ * - Botón de espaciado: alterna entre celdas juntas y separadas.
+ */
 class MainActivity : AppCompatActivity() {
 
     // ViewBinding: clase generada automáticamente a partir de activity_main.xml
     private lateinit var binding: ActivityMainBinding
+
+    // Estado actual de la cuadrícula (empieza igual que en el XML)
+    private var columnas = 3
+    private var separacionDp = 10
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
             )
             // 16dp extra de margen, convertidos a píxeles
-            val extra = (16 * resources.displayMetrics.density).toInt()
+            val extra = dpAPx(16)
             vista.setPadding(
                 barras.left + extra,
                 barras.top + extra,
@@ -54,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         // Conectamos el GridView con el adaptador
-        binding.gridView.adapter = FrutaAdapter(frutas)
+        binding.gridView.adapter = FrutaAdapter(this, frutas)
 
         // Clic normal: position indica qué celda se ha pulsado (empieza en 0)
         binding.gridView.setOnItemClickListener { _, _, position, _ ->
@@ -67,5 +77,43 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Clic largo en: ${frutas[position].nombre}", Toast.LENGTH_LONG).show()
             true
         }
+
+        // --- Botones de columnas: cada uno llama a la misma función con un número ---
+        binding.btnUnaColumna.setOnClickListener { cambiarColumnas(1) }
+        binding.btnDosColumnas.setOnClickListener { cambiarColumnas(2) }
+        binding.btnTresColumnas.setOnClickListener { cambiarColumnas(3) }
+        binding.btnCuatroColumnas.setOnClickListener { cambiarColumnas(4) }
+
+        // --- Botón de espaciado: alterna entre celdas juntas (4dp) y separadas (24dp) ---
+        binding.btnEspaciado.setOnClickListener {
+            separacionDp = if (separacionDp == 24) 4 else 24
+            binding.gridView.horizontalSpacing = dpAPx(separacionDp)
+            binding.gridView.verticalSpacing = dpAPx(separacionDp)
+            actualizarEstado()
+        }
+
+        // Mostramos el estado inicial
+        actualizarEstado()
     }
+
+    /**
+     * Cambia el número de columnas del GridView desde código.
+     * Es lo mismo que android:numColumns en el XML, pero en tiempo de ejecución.
+     */
+    private fun cambiarColumnas(numero: Int) {
+        columnas = numero
+        binding.gridView.numColumns = numero
+        actualizarEstado()
+    }
+
+    /** Muestra encima de la cuadrícula cómo está configurada ahora mismo. */
+    private fun actualizarEstado() {
+        binding.tvEstado.text = getString(R.string.estado_grid, columnas, separacionDp)
+    }
+
+    /**
+     * Convierte dp a píxeles. Los métodos de código (setPadding, spacing...)
+     * trabajan en píxeles, pero en el diseño pensamos en dp.
+     */
+    private fun dpAPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 }

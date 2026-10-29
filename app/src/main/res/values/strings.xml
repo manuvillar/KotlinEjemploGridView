@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Kotlin Ejemplo GridView</string>
+
+    <!-- Textos de los botones -->
+    <string name="una_columna">1</string>
+    <string name="dos_columnas">2</string>
+    <string name="tres_columnas">3</string>
+    <string name="cuatro_columnas">4</string>
+    <string name="cambiar_espaciado">Cambiar espaciado</string>
+
+    <!-- %1$d y %2$d se sustituyen por números con getString(R.string.estado_grid, a, b) -->
+    <string name="estado_grid">Columnas: %1$d · Espaciado: %2$d dp</string>
 </resources>

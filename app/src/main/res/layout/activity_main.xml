@@ -1,15 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- GridView: muestra los elementos en una cuadrícula.
-     El padding lo pone el código (insets), por eso aquí no lo indicamos.
-     clipToPadding="false" deja que la cuadrícula se desplace por debajo de las barras. -->
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/gridView"
+<!-- Contenedor raíz vertical: arriba los controles y debajo la cuadrícula.
+     El padding lo pone el código (insets), por eso aquí no lo indicamos. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:numColumns="3"
-    android:columnWidth="110dp"
-    android:verticalSpacing="10dp"
-    android:horizontalSpacing="10dp"
-    android:stretchMode="columnWidth"
-    android:gravity="center"
-    android:clipToPadding="false" />
+    android:orientation="vertical">
+
+    <!-- Texto que muestra la configuración actual de la cuadrícula -->
+    <TextView
+        android:id="@+id/tvEstado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Fila de botones para elegir el número de columnas.
+         layout_weight="1" reparte el ancho a partes iguales entre los 4 botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnUnaColumna"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:text="@string/una_columna" />
+
+        <Button
+            android:id="@+id/btnDosColumnas"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="4dp"
+            android:text="@string/dos_columnas" />
+
+        <Button
+            android:id="@+id/btnTresColumnas"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="4dp"
+            android:text="@string/tres_columnas" />
+
+        <Button
+            android:id="@+id/btnCuatroColumnas"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:text="@string/cuatro_columnas" />
+    </LinearLayout>
+
+    <!-- Botón que alterna el espacio entre celdas -->
+    <Button
+        android:id="@+id/btnEspaciado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cambiar_espaciado" />
+
+    <!-- GridView: muestra los elementos en una cuadrícula.
+         layout_height="0dp" + layout_weight="1": ocupa todo el espacio que sobra.
+         Estos valores son los iniciales; los botones los cambian desde código. -->
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp"
+        android:numColumns="3"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center" />
+
+</LinearLayout>
