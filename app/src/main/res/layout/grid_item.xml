@@ -6,12 +6,14 @@
     android:padding="8dp"
     android:gravity="center">
 
-    <!-- ImageView para mostrar la imagen del elemento -->
+    <!-- ImageView para mostrar la imagen del elemento.
+         scaleType="fitCenter": la imagen cabe entera, centrada y sin deformarse
+         (con "centerCrop" se recortaban las frutas que no son cuadradas) -->
     <ImageView
         android:id="@+id/itemImage"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:contentDescription="Imagen de la fruta" />
 
     <!-- TextView para mostrar el nombre del elemento -->
